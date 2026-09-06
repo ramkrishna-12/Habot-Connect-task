@@ -54,40 +54,40 @@ jobs:
             exit 1
           fi
 
-#   # ---------------------------------------------------------------------
-#   # Gate 2 — Terraform formatting, validation, and lint.
-#   # ---------------------------------------------------------------------
-#   terraform-lint:
-#     name: Terraform fmt / validate / tflint
-#     runs-on: ubuntu-latest
-#     defaults:
-#       run:
-#         working-directory: terraform
-#     steps:
-#       - uses: actions/checkout@v4
+  # ---------------------------------------------------------------------
+  # Gate 2 — Terraform formatting, validation, and lint.
+  # ---------------------------------------------------------------------
+  terraform-lint:
+    name: Terraform fmt / validate / tflint
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: terraform
+    steps:
+      - uses: actions/checkout@v4
 
-#       - uses: hashicorp/setup-terraform@v3
-#         with:
-#           terraform_version: "1.7.5"
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.7.5"
 
-#       - name: terraform fmt (check only — never auto-fix in CI)
-#         run: terraform fmt -check -recursive
+      - name: terraform fmt (check only — never auto-fix in CI)
+        run: terraform fmt -check -recursive
 
-#       - name: terraform init (backend-less, validate only)
-#         run: terraform init -backend=false
+      - name: terraform init (backend-less, validate only)
+        run: terraform init -backend=false
 
-#       - name: terraform validate
-#         run: terraform validate
+      - name: terraform validate
+        run: terraform validate
 
-#       - name: Setup tflint
-#         uses: terraform-linters/setup-tflint@v4
-#         with:
-#           tflint_version: latest
+      - name: Setup tflint
+        uses: terraform-linters/setup-tflint@v4
+        with:
+          tflint_version: latest
 
-#       - name: tflint (google ruleset — catches missing labels, unscoped IAM, deprecated args)
-#         run: |
-#           tflint --init
-#           tflint --recursive --minimum-failure-severity=warning
+      - name: tflint (google ruleset — catches missing labels, unscoped IAM, deprecated args)
+        run: |
+          tflint --init
+          tflint --recursive --minimum-failure-severity=warning
 
 #   # ---------------------------------------------------------------------
 #   # Gate 3 — Python / Django static analysis.
