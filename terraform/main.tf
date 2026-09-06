@@ -191,9 +191,9 @@ resource "google_bigquery_table" "student_onboarding" {
     { name = "region", type = "STRING", mode = "REQUIRED" },
     { name = "has_diagnosed_learning_difficulty", type = "STRING", mode = "REQUIRED" }, # DCYN: "Y" | "N"
     { name = "diagnosis_document_reference", type = "STRING", mode = "NULLABLE" },
-    { name = "guardian_consent_given", type = "STRING", mode = "REQUIRED" },            # DCYN: "Y" | "N"
-    { name = "requires_lsa_accommodation", type = "STRING", mode = "REQUIRED" },        # DCYN: "Y" | "N"
-    { name = "prior_lsa_support_received", type = "STRING", mode = "REQUIRED" },        # DCYN: "Y" | "N"
+    { name = "guardian_consent_given", type = "STRING", mode = "REQUIRED" },     # DCYN: "Y" | "N"
+    { name = "requires_lsa_accommodation", type = "STRING", mode = "REQUIRED" }, # DCYN: "Y" | "N"
+    { name = "prior_lsa_support_received", type = "STRING", mode = "REQUIRED" }, # DCYN: "Y" | "N"
     { name = "loaded_at", type = "TIMESTAMP", mode = "REQUIRED" },
   ])
 }
