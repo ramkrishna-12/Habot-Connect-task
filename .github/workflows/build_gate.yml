@@ -89,68 +89,68 @@ jobs:
           tflint --init
           tflint --recursive --minimum-failure-severity=warning
 
-#   # ---------------------------------------------------------------------
-#   # Gate 3 — Python / Django static analysis.
-#   # ---------------------------------------------------------------------
-#   python-lint:
-#     name: Python lint / format / security scan
-#     runs-on: ubuntu-latest
-#     defaults:
-#       run:
-#         working-directory: django
-#     steps:
-#       - uses: actions/checkout@v4
+  # ---------------------------------------------------------------------
+  # Gate 3 — Python / Django static analysis.
+  # ---------------------------------------------------------------------
+  python-lint:
+    name: Python lint / format / security scan
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: django
+    steps:
+      - uses: actions/checkout@v4
 
-#       - uses: actions/setup-python@v5
-#         with:
-#           python-version: "3.12"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
 
-#       - name: Install lint tooling
-#         run: pip install black==24.4.2 flake8==7.0.0 bandit==1.7.9 djangorestframework django
+      - name: Install lint tooling
+        run: pip install black==24.4.2 flake8==7.0.0 bandit==1.7.9 djangorestframework django
 
-#       - name: black --check (formatting is enforced, not suggested)
-#         run: black --check .
+      - name: black --check (formatting is enforced, not suggested)
+        run: black --check .
 
-#       - name: flake8
-#         run: flake8 --max-line-length=100 .
+      - name: flake8
+        run: flake8 --max-line-length=100 .
 
-#       - name: bandit (static security scan — flags eval/exec, weak hashing, hardcoded secrets)
-#         run: bandit -r . -ll
+      - name: bandit (static security scan — flags eval/exec, weak hashing, hardcoded secrets)
+        run: bandit -r . -ll
 
-#   # ---------------------------------------------------------------------
-#   # Fail-closed deploy gate. This job's "needs" list is the entire
-#   # mechanism: it is the only job allowed to touch infrastructure, and it
-#   # is structurally unreachable unless all three gates above are green.
-#   # ---------------------------------------------------------------------
-#   deploy:
-#     name: Deploy (only reachable if every gate passed)
-#     needs: [secret-scan, terraform-lint, python-lint]
-#     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-#     runs-on: ubuntu-latest
-#     environment: staging
-#     steps:
-#       - uses: actions/checkout@v4
-#       - name: Placeholder deploy step
-#         run: echo "All Poka-Yoke gates passed — proceeding to terraform apply / migrate."
+  # ---------------------------------------------------------------------
+  # Fail-closed deploy gate. This job's "needs" list is the entire
+  # mechanism: it is the only job allowed to touch infrastructure, and it
+  # is structurally unreachable unless all three gates above are green.
+  # ---------------------------------------------------------------------
+  deploy:
+    name: Deploy (only reachable if every gate passed)
+    needs: [secret-scan, terraform-lint, python-lint]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - uses: actions/checkout@v4
+      - name: Placeholder deploy step
+        run: echo "All Poka-Yoke gates passed — proceeding to terraform apply / migrate."
 
-#   # ---------------------------------------------------------------------
-#   # Quarantine notifier — only ever runs when something upstream failed.
-#   # Makes the fail-closed state visible to a human without giving them a
-#   # way to route around it.
-#   # ---------------------------------------------------------------------
-#   quarantine-notify:
-#     name: Quarantine notification
-#     needs: [secret-scan, terraform-lint, python-lint]
-#     if: failure() && github.event_name == 'pull_request'
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Comment quarantine status on the PR
-#         uses: actions/github-script@v7
-#         with:
-#           script: |
-#             await github.rest.issues.createComment({
-#               owner: context.repo.owner,
-#               repo: context.repo.repo,
-#               issue_number: context.issue.number,
-#               body: "🚧 **Build quarantined.** One or more Poka-Yoke gates failed (secret scan, Terraform lint, or Python lint). This PR cannot merge or deploy until every gate is green — see the failed job logs above for the exact violation."
-#             });
+  # ---------------------------------------------------------------------
+  # Quarantine notifier — only ever runs when something upstream failed.
+  # Makes the fail-closed state visible to a human without giving them a
+  # way to route around it.
+  # ---------------------------------------------------------------------
+  quarantine-notify:
+    name: Quarantine notification
+    needs: [secret-scan, terraform-lint, python-lint]
+    if: failure() && github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Comment quarantine status on the PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: "🚧 **Build quarantined.** One or more Poka-Yoke gates failed (secret scan, Terraform lint, or Python lint). This PR cannot merge or deploy until every gate is green — see the failed job logs above for the exact violation."
+            });
