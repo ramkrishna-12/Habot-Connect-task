@@ -148,11 +148,11 @@ resource "google_storage_bucket_iam_member" "d0_loader_read_binding" {
 # ---------------------------------------------------------------------------
 
 resource "google_bigquery_dataset" "d1_staged_enforced" {
-  dataset_id                     = "d1_staged_enforced_${var.environment}"
-  project                        = var.project_id
-  location                       = var.region
-  default_table_expiration_ms    = null # enforced data is retained; expiry is a schema decision, not a dataset default
-  delete_contents_on_destroy     = false
+  dataset_id                  = "d1_staged_enforced_${var.environment}"
+  project                     = var.project_id
+  location                    = var.region
+  default_table_expiration_ms = null # enforced data is retained; expiry is a schema decision, not a dataset default
+  delete_contents_on_destroy  = false
 
   default_encryption_configuration {
     kms_key_name = var.kms_key_id
@@ -163,7 +163,7 @@ resource "google_bigquery_dataset" "d1_staged_enforced" {
   # roles for individual users are the exact anti-pattern this project exists
   # to eliminate.
   access {
-    role          = "OWNER"
+    role           = "OWNER"
     group_by_email = var.data_engineering_group
   }
   access {
