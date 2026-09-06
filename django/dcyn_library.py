@@ -10,8 +10,7 @@ from enum import Enum
 
 
 class DCYNError(ValueError):
-    """Raised when an input cannot be resolved to a Yes/No answer.
-    """
+    """Raised when an input cannot be resolved to a Yes/No answer."""
 
 
 class DCYN(str, Enum):
@@ -67,7 +66,8 @@ class DCYN(str, Enum):
     ) -> None:
         """Enforce a DCYN-to-DCYN dependency rule, e.g.:
 
-        has_diagnosed_learning_difficulty == YES  =>  diagnosis_document_reference must be present."""
+        has_diagnosed_learning_difficulty == YES  =>  diagnosis_document_reference must be present.
+        """
         if trigger == cls.YES and not dependent_value:
             raise DCYNError(
                 f"Dependency violation: trigger answered YES but required field "
