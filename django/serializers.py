@@ -23,7 +23,9 @@ _NO_STRINGS = frozenset({"no", "n", "false"})
 class StudentOnboardingSerializer(serializers.Serializer):
     """Validates and deconstructs one raw onboarding payload.
 
-    All numeric/length limits below are explicit and exact, and are enforced at the DRF layer. The DCYN library is used to
+    All numeric/length limits below are explicit and exact, and are
+    enforced at the DRF layer. The DCYN library resolves the derived
+    Yes/No fields once validation passes.
     """
 
     full_legal_name = serializers.CharField(
