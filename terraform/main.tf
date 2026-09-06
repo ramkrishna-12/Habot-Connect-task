@@ -44,7 +44,7 @@ provider "google" {
   region  = var.region
 }
 
-data "google_project" "current" {}
+
 
 # ---------------------------------------------------------------------------
 # Service accounts — one identity per stage of the pipeline. No identity is
